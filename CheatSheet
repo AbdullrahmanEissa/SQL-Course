@@ -1,0 +1,82 @@
+================================================================================
+                    SQL BASICS MASTERY - FINAL CONCLUSION
+================================================================================
+
+1. DATABASE DESIGN PRINCIPLES (THE ARCHITECTURE)
+--------------------------------------------------------------------------------
+Before writing code, a database is architected through four main phases:
+
+* Conceptual Design: Identifying the main "Entities" and breaking data down 
+  into separate, independent tables to eliminate redundancy (Normalization).
+* Relationships: Linking these independent tables logically. 
+  - PRIMARY KEY (PK): Uniquely identifies each record in a table.
+  - FOREIGN KEY (FK): Placed in a table to reference the PK of another table, 
+    creating a strict relationship (e.g., DeptID inside the Employees table).
+* Physical Design: Writing the DDL commands to generate the structure while 
+  enforcing Constraints (NOT NULL, UNIQUE, DEFAULT, CHECK) to guarantee data 
+  integrity and security.
+* Iterative Refinement: Modifying the structure safely using ALTER TABLE as 
+  system requirements evolve, rather than dropping and losing data.
+
+2. COMMAND SYNTAX CHEAT SHEET (THE TOOLSET)
+--------------------------------------------------------------------------------
+-- [ DDL: Data Definition Language (Structure) ] --
+CREATE TABLE:
+  CREATE TABLE table_name (
+      column_name DATATYPE CONSTRAINT,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(50) NOT NULL
+  );
+
+ALTER TABLE:
+  ALTER TABLE table_name ADD column_name DATATYPE;
+  ALTER TABLE table_name DROP COLUMN column_name;
+
+DROP TABLE:
+  DROP TABLE IF EXISTS table_name;
+
+-- [ DML: Data Manipulation Language (Data) ] --
+INSERT:
+  INSERT INTO table_name (col1, col2) VALUES (val1, val2);
+
+UPDATE:
+  UPDATE table_name SET col1 = new_val WHERE condition;
+
+DELETE:
+  DELETE FROM table_name WHERE condition;
+
+-- [ DQL: Querying, Filtering & Sorting ] --
+SELECT & ALIASES:
+  SELECT DISTINCT col1, col2 AS 'New Name' FROM table_name;
+
+FILTERING (WHERE, IN, BETWEEN, LIKE):
+  SELECT * FROM table_name 
+  WHERE col1 = value AND col2 > value
+     OR col3 IN ('Option1', 'Option2')
+     OR col4 BETWEEN 10 AND 20
+     OR col5 LIKE '%pattern_';
+
+SORTING:
+  SELECT * FROM table_name ORDER BY col1 ASC, col2 DESC;
+
+-- [ AGGREGATION & COMBINING DATA ] --
+GROUPING (SUM, COUNT, AVG, MIN, MAX):
+  SELECT DeptID, AVG(Salary) 
+  FROM Employees 
+  GROUP BY DeptID 
+  HAVING COUNT(EmployeeID) > 5;
+
+JOINS (Horizontal Combining):
+  SELECT t1.col, t2.col 
+  FROM table_name1 t1
+  INNER JOIN table_name2 t2 ON t1.FK = t2.PK;
+  -- (Can also use LEFT JOIN, RIGHT JOIN)
+
+UNION (Vertical Combining):
+  SELECT name FROM table1
+  UNION ALL      -- (Use UNION to remove duplicates, UNION ALL to keep them)
+  SELECT name FROM table2;
+
+================================================================================
+                    END OF DOCUMENT
+================================================================================
