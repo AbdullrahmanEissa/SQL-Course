@@ -1,0 +1,223 @@
+Here is the detailed study guide broken down into 5 distinct modules, complete with concepts, practical scenarios, and the exact SQL commands based on your notes.
+
+### Module 1: Core Architecture and Basic Querying (DDL & DML)
+
+* **Data Definition Language (DDL):** SQL commands that control the building and modifying of the database structure and metadata.
+
+
+* `CREATE`: Builds a new table or database structure.
+
+
+* `ALTER`: Modifies an existing structure.
+
+
+* `DROP`: Permanently deletes the structure and its data.
+
+
+
+
+* **Data Manipulation Language (DML):** SQL commands used to handle the actual data records inside the tables.
+
+
+* `INSERT`: Adds new data.
+
+
+* `UPDATE`: Modifies existing data.
+
+
+* `DELETE`: Removes data.
+
+
+* `SELECT`: Retrieves data.
+
+
+
+
+* **Scenario (Building Structure):** You need to create a new table to store department data.
+
+
+```sql
+CREATE TABLE Departments (
+    DeptID INT,
+    DeptName VARCHAR(50)
+);
+
+```
+
+
+* **Scenario (Handling Data):** You want to add a new "Human Resources" department and retrieve its record to confirm.
+
+
+```sql
+INSERT INTO Departments (DeptID, DeptName)
+VALUES (10, 'Human Resources');
+
+SELECT * FROM Departments;
+
+```
+
+
+
+---
+
+### Module 2: Filtering and Sorting Data
+
+* **Filtering (`WHERE`):** The `WHERE` clause filters data row-by-row before retrieval using comparison operators (`=`, `>`, `<`, `!=`) and logical operators (`AND`, `OR`, `NOT`). This ensures efficient performance by preventing the retrieval of unnecessary records.
+
+
+* **Sorting (`ORDER BY`):** This organizes results in ascending (`ASC`) or descending (`DESC`) order. You can specify multiple columns to break sorting ties.
+
+
+* **Scenario (Multiple `WHERE` Conditions):** Retrieve employees in the Sales department earning a salary greater than 4000.
+
+
+```sql
+SELECT EmployeeName, Department, Salary 
+FROM Employees
+WHERE Department = 'Sales' AND Salary > 4000;
+
+```
+
+
+* **Scenario (Multiple `ORDER BY` Columns):** Sort products by category alphabetically, and if there is a tie, sort by price from most to least expensive.
+
+
+```sql
+SELECT ProductName, Category, Price 
+FROM Products 
+ORDER BY Category ASC, Price DESC;
+
+```
+
+
+
+---
+
+### Module 3: Advanced Filtering (Pattern Matching & Ranges)
+
+* **Pattern Matching (`LIKE`):** Used when exact values are unknown. The `%` wildcard represents any number of characters, while the `_` wildcard represents exactly one character.
+
+
+* **List Filtering (`IN`):** Serves as a cleaner and shorter alternative to writing multiple `OR` conditions.
+
+
+* **Range Filtering (`BETWEEN`):** Filters data within an inclusive continuous range. When passing dates without times, the engine defaults to midnight (`00:00:00`), so a time later in the day on the end date will be excluded.
+
+
+* **Scenario (Using `%`):** Extract products containing the word "Smart" anywhere in the name.
+
+
+```sql
+SELECT ProductName 
+FROM Products 
+WHERE ProductName LIKE '%Smart%';
+
+```
+
+
+* **Scenario (Using `_`):** Find employees whose names are exactly 4 letters long and start with "J".
+
+
+```sql
+SELECT EmployeeName 
+FROM Employees 
+WHERE EmployeeName LIKE 'J___';
+
+```
+
+
+* **Scenario (`IN` and `BETWEEN`):** Find employees in specific departments, and separately find employees with salaries between 5000 and 8000.
+
+
+```sql
+-- Using IN
+SELECT EmployeeName, Department 
+FROM Employees 
+WHERE Department IN ('IT', 'HR', 'Marketing');
+
+-- Using BETWEEN
+SELECT EmployeeName, Salary 
+FROM Employees 
+WHERE Salary BETWEEN 5000 AND 8000;
+
+```
+
+
+
+---
+
+### Module 4: Formatting Output (Duplicates & Aliases)
+
+* **Refining Output (`DISTINCT`):** Removes duplicate row combinations to ensure reports are accurate and concise. It evaluates duplication based on the unique combination of the entire row when multiple columns are selected.
+
+
+* **Column Aliases (`AS`):** Assigns temporary, readable names to columns (or calculations) in the result set without changing the actual database schema. Quotes must be used if the alias contains a space.
+
+
+* **Scenario (`DISTINCT`):** Find the unique combinations of job titles within each department to see the exact roles that exist.
+
+
+```sql
+SELECT DISTINCT Department, JobTitle 
+FROM Employees;
+
+```
+
+
+* **Scenario (`AS`):** Calculate the annual salary for employees and rename the resulting columns for a professional report.
+
+
+```sql
+SELECT EmployeeName AS Name, Salary * 12 AS 'Annual Salary' 
+FROM Employees;
+
+```
+
+
+
+---
+
+### Module 5: Aggregation and Combining Data
+
+* **Summarizing Data:** Aggregate functions (`SUM`, `COUNT`, `AVG`, `MIN`, `MAX`) perform calculations across multiple rows. `GROUP BY` categorizes data, while `HAVING` filters the groups *after* the aggregation calculations are complete.
+
+
+* **Horizontal Joins (`JOIN`):** Links data distributed across multiple tables using common columns. An `INNER JOIN` returns only exact matches between the tables.
+
+
+* **Vertical Unions (`UNION`):** Merges the results of two queries into a single output. `UNION` removes duplicates, while `UNION ALL` retains duplicates for faster execution.
+
+
+* **Scenario (`GROUP BY` & `HAVING`):** Find departments that have more than 5 employees, and calculate their average salary.
+
+
+```sql
+SELECT DepartmentID, AVG(Salary) 
+FROM Employees 
+GROUP BY DepartmentID 
+HAVING COUNT(EmployeeID) > 5;
+
+```
+
+
+* **Scenario (`INNER JOIN`):** Generate a report showing the employee's name alongside the actual name of their department (linking the `Employees` and `Departments` tables).
+
+
+```sql
+SELECT Employees.EmployeeName, Departments.DeptName 
+FROM Employees 
+INNER JOIN Departments 
+ON Employees.DepartmentID = Departments.DepartmentID;
+
+```
+
+
+* **Scenario (`UNION`):** Combine the names of students and employees into a single unique list.
+
+
+```sql
+SELECT name FROM student
+UNION
+SELECT name FROM employee;
+
+```
